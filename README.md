@@ -41,11 +41,11 @@ Basic usage is:
 python3 clapback.py
 ```
 
-There are the following options:
--c: Record the calibration file.
--d: Use the default calibration file. This is only necessary if you have successfully recorded a calibration file which you wish to override; otherwise, the default calibration file is used automatically.
--l N: Set the recording time for N seconds. This is how long the script will run, listening for you and clapping.
--o N: Set the clapping threshhold to N dBFS, where N is a float. The higher a number, the louder you will need to talk for the program to clap for you. You may wish to use this if calibration was not possible. The default threshold is about -16.
+There are the following options: 
+1. -c: Record the calibration file.
+2. -d: Use the default calibration file. This is only necessary if you have successfully recorded a calibration file which you wish to override; otherwise, the default calibration file is used automatically.
+3. -l N: Set the recording time for N seconds. This is how long the script will run, listening for you and clapping.
+4. -o N: Set the clapping threshhold to N dBFS, where N is a float. The higher a number, the louder you will need to talk for the program to clap for you. You may wish to use this if calibration was not possible. The default threshold is about -16.
 
 Example:
 
