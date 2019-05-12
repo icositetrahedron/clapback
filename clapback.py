@@ -80,23 +80,23 @@ if args.recalibrate:
     calibrate.record()
 if os.path.isfile("assets/calibrate.wav") and not args.default_calibration:
     CALIBRATION_FILENAME="assets/calibrate.wav"
+    phoneme_alignments, word_alignments = align.align(CALIBRATION_FILENAME, TRANSCRIPT_FILENAME)
+
+    audio = AudioSegment.from_wav(CALIBRATION_FILENAME)
+
+    word_dbfs = []
+    word_midpoints = []
+
+    for word, time_start, time_end in word_alignments:
+        if word != "sp":
+            word_dbfs.append(get_vol_at_timestamp(audio,time_start,time_end))
+            word_midpoints.append((time_end+time_start)/2)
+
+    max_dbfs = max(word_dbfs)
+    min_time = mlf_to_ms(min([word_midpoints[i+1]-word_midpoints[i] for i in range(len(word_midpoints)-1)]))*10**6
 else:
     CALIBRATION_FILENAME="assets/backup_calibrate.wav"
-
-
-phoneme_alignments, word_alignments = align.align(CALIBRATION_FILENAME, TRANSCRIPT_FILENAME)
-
-audio = AudioSegment.from_wav(CALIBRATION_FILENAME)
-
-word_dbfs = []
-word_midpoints = []
-
-for word, time_start, time_end in word_alignments:
-    if word != "sp":
-        word_dbfs.append(get_vol_at_timestamp(audio,time_start,time_end))
-        word_midpoints.append((time_end+time_start)/2)
-
-max_dbfs = max(word_dbfs)
-min_time = mlf_to_ms(min([word_midpoints[i+1]-word_midpoints[i] for i in range(len(word_midpoints)-1)]))*10**6
+    max_dbfs=-16.576273313948487
+    min_time=12489573.788699154
 
 record(dbfs_for_clap=max_dbfs, time_for_clap=min_time, length=args.length)
