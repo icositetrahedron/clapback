@@ -8,7 +8,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 5
+RECORD_SECONDS = 6
 TRANSCRIPT_FILENAME = "assets/transcription.txt"
 CALIBRATION_FILENAME = "assets/calibrate.wav"
 

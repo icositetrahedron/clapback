@@ -1,3 +1,4 @@
+import argparse
 import math
 import os
 import struct
@@ -16,7 +17,7 @@ RATE = 44100
 CHUNK = 1024
 RECORD_SECONDS = 5
 TRANSCRIPT_FILENAME = "assets/transcription.txt"
-CALIBRATION_FILENAME = "assets/calibrate.wav"
+CALIBRATION_FILENAME = "assets/backup_calibrate.wav"
 CALIBRATION_ON=True
 
 # https://stackoverflow.com/questions/25868428/pyaudio-how-to-check-volume
@@ -68,12 +69,20 @@ def record(dbfs_for_clap, time_for_clap, length=RECORD_SECONDS):
         frames.append(data)
     print("finished recording")
 
-if not os.path.isfile(CALIBRATION_FILENAME):
-    if CALIBRATION_ON:
-        calibrate.record()
-    else:
-        print("no calibration file.")
-        sys.exit()
+
+parser = argparse.ArgumentParser(description='Clap as you talk.')
+parser.add_argument('-l', '--length', metavar='N', type=int, default=10, help='how many seconds to record for clapping')
+parser.add_argument('-c', '--recalibrate', action='store_true', help='re-record calibration file')
+parser.add_argument('-d', '--default_calibration', action='store_true', help='use default calibration file')
+
+args = parser.parse_args()
+if args.recalibrate:
+    calibrate.record()
+if os.path.isfile("assets/calibrate.wav") and not args.default_calibration:
+    CALIBRATION_FILENAME="assets/calibrate.wav"
+else:
+    CALIBRATION_FILENAME="assets/backup_calibrate.wav"
+
 
 phoneme_alignments, word_alignments = align.align(CALIBRATION_FILENAME, TRANSCRIPT_FILENAME)
 
@@ -90,4 +99,4 @@ for word, time_start, time_end in word_alignments:
 max_dbfs = max(word_dbfs)
 min_time = mlf_to_ms(min([word_midpoints[i+1]-word_midpoints[i] for i in range(len(word_midpoints)-1)]))*10**6
 
-record(dbfs_for_clap=max_dbfs, time_for_clap=min_time, length=20)
+record(dbfs_for_clap=max_dbfs, time_for_clap=min_time, length=args.length)
