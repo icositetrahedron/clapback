@@ -74,6 +74,8 @@ parser = argparse.ArgumentParser(description='Clap as you talk.')
 parser.add_argument('-l', '--length', metavar='N', type=int, default=10, help='how many seconds to record for clapping')
 parser.add_argument('-c', '--recalibrate', action='store_true', help='re-record calibration file')
 parser.add_argument('-d', '--default_calibration', action='store_true', help='use default calibration file')
+parser.add_argument('-o', '--override_dbfs', default=None, help='manually set minimum dbfs for clap')
+
 
 args = parser.parse_args()
 if args.recalibrate:
@@ -96,7 +98,10 @@ if os.path.isfile("assets/calibrate.wav") and not args.default_calibration:
     min_time = mlf_to_ms(min([word_midpoints[i+1]-word_midpoints[i] for i in range(len(word_midpoints)-1)]))*10**6
 else:
     CALIBRATION_FILENAME="assets/backup_calibrate.wav"
-    max_dbfs=-16.576273313948487
+    if args.override_dbfs is not None:
+        max_dbfs = float(args.override_dbfs)
+    else:
+        max_dbfs=-16.576273313948487
     min_time=12489573.788699154
 
 record(dbfs_for_clap=max_dbfs, time_for_clap=min_time, length=args.length)
