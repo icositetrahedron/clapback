@@ -11,7 +11,11 @@ pip3 install -r requirements.txt
 
 ## Optional Calibration
 
-This tool uses p2fa https://github.com/jaekookang/p2fa_py3 for calibration. A pre-made file is included in case installing the requirements is too complex for the user; this may impact effectiveness due to differences in speech and environment.
+Calibration is optional but strongly recommended. Calibration sets threshholds for triggering clapping, based on the user's speech and environment. However, in the case that installation of calibration requirements is not possible, this section may be skipped.
+
+This tool uses p2fa https://github.com/jaekookang/p2fa_py3for calibration; the files are already included.
+
+### Calibration Requirement Installation
 
 Download HTK-3.4.1 (NOT 3.5) from http://htk.eng.cam.ac.uk/. Registration is required.
 
